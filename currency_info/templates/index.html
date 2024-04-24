@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+
+    <title><b>Currency</b></title>
+  </head>
+  <body>
+    {% include 'includes/header.html' %}
+    <main>
+      <div class="container py-5">
+        <div class="row align-items-start">
+            <div class="col-4 col-sm-3 offset-1" style="background: whitesmoke;">
+              One of three columns
+            </div>
+            <div class="col-7 col-sm-8">
+              One of three columns
+            </div>
+        </div>
+      </div>
+    </main>
+    {% include 'includes/footer.html' %}
+  </body>
+</html>
