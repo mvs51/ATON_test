@@ -1,0 +1,22 @@
+{% extends 'index.html' %}
+
+{% block content %}
+    <table class="table table-bordered">
+        <thead>
+            <tr style="text-align: right;">
+                <th>Дата</th>
+                <th>Курс</th>
+                <th>Изменение</th>
+                <tbody>
+                    {% for currency in currencies %}
+                    <tr>
+                        <td>{{ currency.date }}</td>
+                        <td>{{ currency.value }}</td>
+                        <td>{{ currency.difference }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </tr>
+        </thead>
+
+{% endblock %}
