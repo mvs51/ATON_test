@@ -10,5 +10,5 @@ router_v1 = routers.DefaultRouter()
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('currency.urls')),
-    path('api/currency', CurrencyView.as_view())
+    path('api/currency', CurrencyView.as_view(), name='currency')
 ]

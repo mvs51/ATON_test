@@ -1,23 +1,30 @@
 {% extends 'index.html' %}
 
 {% block content %}
-    <table class="table table-bordered">
-        <thead>
-            <tr style="text-align: right;">
-                <th>Date</th>
-                <th>Value</th>
-                <th>Difference</th>
-                <tbody>
-                    {% for currency in currencies %}
-                    <tr>
-                        <td>{{ currency.date }}</td>
-                        <td>{{ currency.value }}</td>
-                        <td>{{ currency.difference }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </tr>
-        </thead>
-    </table>
+    {% if request.method == "POST" %}
+        {{ currencies|safe }}
+    {% else %}
+        <table class="table table-bordered">
+            <thead>
+                <tr style="text-align: center;">
+                    <th>date</th>
+                    <th>value</th>
+                    <th>name_code</th>
+                    <th>name</th>
+                    <tbody>
+                        {% for currency in currencies %}
+                            <tr>
+                                <td>{{ currency.date|date:"SHORT_DATE_FORMAT" }}</td>
+                                <td>{{ currency.value }}</td>
+                                <td>{{ currency.name_code }}</td>
+                                <td>{{ currency.name }}</td>
+                            </tr>
+                        {% endfor %}
+                        
+                    </tbody>
+                </tr>
+            </thead>
+        </table>
+    {% endif %}
 
 {% endblock %}
