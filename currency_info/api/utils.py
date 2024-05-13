@@ -61,7 +61,17 @@ def process_currencies(df:pd.DataFrame, cur:str):
 def save_to_database(df: pd.DataFrame):
     con = sqlite3.connect('db.sqlite3')
     cur = con.cursor()
+
+    update_query = '''
+        INSERT INTO currency (date, name, name_code, value)
+        SELECT date, name, name_code, value
+        FROM temp_table WHERE true
+        ON CONFLICT(date, name_code)
+        DO UPDATE SET value=EXCLUDED.value;
+    '''
     df.to_sql('temp_table', con, if_exists='replace', index_label='id')
+    cur.execute(update_query)
+    con.commit()
     con.close()
 
 def read_country_codes():
