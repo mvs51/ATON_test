@@ -53,7 +53,10 @@ def process_currencies(df:pd.DataFrame, cur:str):
     currencies['date']= pd.to_datetime(
         currencies['date'], format="%d.%m.%Y"
     )
-    currencies['value'] = currencies['value']/currencies['quantity']
+    currencies['date'] = currencies['date'].dt.date
+    currencies['value'] = round(
+        currencies['value']/currencies['quantity'], 4
+    )
     currencies['name_code'] = CODES_MAPPING[int(cur)]
     return currencies.drop(columns=['difference', 'quantity'])
 
@@ -63,7 +66,7 @@ def save_to_database(df: pd.DataFrame):
     cur = con.cursor()
 
     update_query = '''
-        INSERT INTO currency (date, name, name_code, value)
+        INSERT INTO currency_currency (date, name, name_code, value)
         SELECT date, name, name_code, value
         FROM temp_table WHERE true
         ON CONFLICT(date, name_code)
@@ -71,6 +74,7 @@ def save_to_database(df: pd.DataFrame):
     '''
     df.to_sql('temp_table', con, if_exists='replace', index_label='id')
     cur.execute(update_query)
+    cur.execute('''DROP TABLE temp_table;''')
     con.commit()
     con.close()
 
