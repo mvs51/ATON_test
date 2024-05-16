@@ -1,54 +1,43 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% load static %}
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+{% extends 'base.html' %}
 
-    <title>Currency</title>
-  </head>
-  <body>
-    {% include 'includes/header.html' %}
-    <main>
-      <div class="container py-5">
-        <div class="row align-items-start">
-          <div class="col-4 col-sm-3" style="background: LightSteelBlue;">
-            <form method="post" action="{% url 'currency' %}" enctype="multipart/form-data">
-              {% csrf_token %}
-              <div class="form-group">
-                <label for="inputStartDate">Start Date:</label>
-                <input name="start_date" type="date" class="form-control" id="start_date">
-              </div>
-              <div class="form-group">
-                <label for="imputEndDate">End Date:</label>
-                <input name="end_date" type="date" class="form-control" id="end_date">
-              </div>
-              <div class="form-group">
-                <label for="inputName">Currency:</label>
-                <select name="currency_name" class="form-control" id="currency_name">
-                  <option value=52148>Доллар США</option>
-                  <option value=52170>ЕВРО</option>
-                  <option value=52146>Фунт стерлингов</option>
-                  <option value=52246>Японская йена</option>
-                  <option value=52158>Турецкая лира</option>
-                  <option value=52238>Индийская рупия</option>
-                  <option value=52207>Китайский юань</option>
-                </select>
-              </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
-              </form>
-            </div>
-          <div class="col-7 col-sm-8 offset-1">
+{% block content %}
 
-            {% block content %} The result will be displayed here {% endblock %}
-          
+<main>
+  <div class="container py-5">
+    <div class="row align-items-start">
+      <div class="col-4 col-sm-3" style="background: LightSteelBlue;">
+        <form method="post" action="{% url 'currency' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="inputStartDate">Start Date:</label>
+            <input name="start_date" type="date" class="form-control" id="start_date">
           </div>
+          <div class="form-group">
+            <label for="imputEndDate">End Date:</label>
+            <input name="end_date" type="date" class="form-control" id="end_date">
+          </div>
+          <div class="form-group">
+            <label for="inputName">Currency:</label>
+            <select name="currency_name" class="form-control" id="currency_name">
+              <option value=52148>Доллар США</option>
+              <option value=52170>ЕВРО</option>
+              <option value=52146>Фунт стерлингов</option>
+              <option value=52246>Японская йена</option>
+              <option value=52158>Турецкая лира</option>
+              <option value=52238>Индийская рупия</option>
+              <option value=52207>Китайский юань</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
         </div>
+      <div class="col-7 col-sm-8 offset-1">
+
+        {% block results %} The result will be displayed here {% endblock %}
+      
       </div>
-    </main>
-    {% include 'includes/footer.html' %}
-  </body>
-</html>
+    </div>
+  </div>
+</main>
+
+{% endblock %}

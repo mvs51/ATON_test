@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from urllib import request, parse
 
 import pandas as pd
@@ -20,12 +20,16 @@ CODES_MAPPING = {
 
 
 def read_currency_rates(
+        cur:int,
         start_date:str,
-        end_date:str,
-        cur:int
+        end_date:str='',
     ):
     start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
-    end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+    if end_date:
+        end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+    else:
+        end_date = start_date + timedelta(days=1)
+        # end_date = start_date
     params = {
         'cur': cur,
         'pv': 1,

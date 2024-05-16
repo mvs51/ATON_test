@@ -30,24 +30,30 @@ class Currency(models.Model):
 
 
 class BaseCurrency(models.Model):
-    date = models.DateField(blank=False, unique=True)
+    date = models.DateField(blank=False)
     name = models.CharField(max_length=100)
     name_code = models.CharField(
         blank=False,
         max_length=3,
         choices=NAME_CODES_CHOICES,
+        unique=True,
     )
     value = models.FloatField(blank=False)
+
+    class Meta:
+        unique_together = [['date', 'name_code']]
 
 
 class CurrencyChanges(ComputedFieldsModel):
     date = models.DateField(blank=False)
     date_currency = models.ForeignKey(
         Currency,
+        blank=True, null=True,
         on_delete=models.CASCADE
     )
     base_currency=models.ForeignKey(
         BaseCurrency,
+        blank=True, null=True,
         on_delete=models.CASCADE
     )
 
@@ -57,7 +63,6 @@ class CurrencyChanges(ComputedFieldsModel):
     @computed(
         models.FloatField(),
         depends=[
-            ('self', ['name']),
             ('date_currency', ['value']),
             ('base_currency', ['value']),
         ]
@@ -68,7 +73,6 @@ class CurrencyChanges(ComputedFieldsModel):
     @computed(
         models.FloatField(),
         depends=[
-            ('self', ['name']),
             ('date_currency', ['name_code']),
         ]
     )
