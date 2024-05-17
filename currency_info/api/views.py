@@ -1,5 +1,3 @@
-import os
-
 import pandas as pd
 from django.shortcuts import get_object_or_404
 from rest_framework.renderers import TemplateHTMLRenderer

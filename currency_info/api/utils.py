@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from urllib import request, parse
+from io import StringIO
 
 import pandas as pd
 import sqlite3
@@ -44,7 +45,7 @@ def read_currency_rates(
     data = parse.urlencode(params)
     page = request.urlopen(f'{URL_RATES}{data}')
 
-    return page.read().decode("cp1251")
+    return StringIO(page.read().decode("cp1251"))
 
 
 def process_currencies(df:pd.DataFrame, cur:str):
@@ -84,7 +85,7 @@ def save_to_database(df: pd.DataFrame):
 
 def read_country_codes():
     page = request.urlopen(URL_COUNTRIES)
-    return page.read().decode("utf-8")
+    return StringIO(page.read().decode("utf-8"))
 
 
 def process_country_codes(df:pd.DataFrame):
