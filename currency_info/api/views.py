@@ -1,11 +1,14 @@
 import os
 
 import pandas as pd
+from django.shortcuts import get_object_or_404
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from currency.models import Currency, BaseCurrency
+from currency.models import (
+    Currency, BaseCurrency, CurrencyChanges
+)
 from .utils import (
     read_currency_rates,
     process_currencies,
@@ -42,7 +45,28 @@ class CurrencyView(APIView):
         currencies = currencies.merge(
             country_codes, how='left', on='name_code'
         )
-        save_to_database(currencies)
+        # save_to_database(currencies)
+        for index, row in currencies.iterrows():
+            Currency.objects.update_or_create(
+                date=row['date'],
+                name_code=row['name_code'],
+                defaults={'value':row['value']}
+            )
+
+        for index, row in currencies.iterrows():
+            if not CurrencyChanges.objects.filter(
+                date=row['date'],
+                date_currency=Currency.objects.get(
+                    date=row['date'], name_code=row['name_code']
+                ),
+            ).exists():
+                CurrencyChanges.objects.create(
+                    date=row['date'],
+                    date_currency=Currency.objects.get(
+                        date=row['date'], name_code=row['name_code']
+                    ),
+                    base_currency=get_object_or_404(BaseCurrency, name_code=row['name_code'])
+                )
         context = {
             'currencies': currencies.to_html(
                 classes='table table-bordered',
@@ -95,3 +119,13 @@ class BaseCurrencyView(APIView):
                 defaults={'date':row['date'], 'value':row['value']}
             )
         return Response(context)
+
+
+class CurrencyChangesView(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'currency_changes.html'
+
+    def get(self, request):
+        queryset = CurrencyChanges.objects.all()
+    
+        return Response({'currency_changes': queryset})

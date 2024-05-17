@@ -1,0 +1,50 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<main>
+  <div class="container py-5">
+    <div class="row align-items-start">
+      <div class="col-4 col-sm-3" style="background: LightSteelBlue;">
+        <!-- <form method="post" action="{% url 'base_currency' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="inputDate">Date:</label>
+            <input name="date" type="date" class="form-control" id="date">
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form> -->
+      </div>
+      <div class="col-7 col-sm-8 offset-1">
+  
+      {% block results %}
+        {% if request.method == "POST" %}
+          {{ base_currencies|safe }}
+        {% else %}
+          <table class="table table-bordered">
+            <thead>
+              <tr style="text-align: center;">
+                <th>date</th>
+                <th>name_code</th>
+                <th>difference</th>
+                <tbody>
+                  {% for currency in currency_changes %}
+                  <tr>
+                    <td>{{ currency.date|date:"SHORT_DATE_FORMAT" }}</td>
+                    <td>{{ currency.name_code }}</td>
+                    <td>{{ currency.difference }}</td>
+                  </tr>
+                  {% endfor %}
+                        
+                </tbody>
+              </tr>
+            </thead>
+          </table>
+        {% endif %}
+
+      {% endblock %}
+        
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

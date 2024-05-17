@@ -68,10 +68,10 @@ class CurrencyChanges(ComputedFieldsModel):
         ]
     )
     def difference(self):
-        return self.date_currency.value - self.base_currency.value
+        return round(self.date_currency.value - self.base_currency.value, 6)
     
     @computed(
-        models.FloatField(),
+        models.CharField(max_length=3),
         depends=[
             ('date_currency', ['name_code']),
         ]
