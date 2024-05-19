@@ -14,64 +14,72 @@ NAME_CODES_CHOICES = (
 
 
 class Currency(models.Model):
-    date = models.DateField(blank=False)
-    name = models.CharField(max_length=100)
+    '''Model for the currency rates storage'''
+
+    date = models.DateField('date', blank=False)
+    name = models.CharField('name', max_length=100)
     name_code = models.CharField(
+        'name code',
         blank=False,
         max_length=3,
         choices=NAME_CODES_CHOICES,
     )
-    value = models.FloatField(blank=False)
+    value = models.FloatField('currency value', blank=False)
 
     class Meta:
-        # db_table = 'currency'
-        # managed = False
+        verbose_name = 'currency'
         unique_together = [['date', 'name_code']]
 
 
 class BaseCurrency(models.Model):
-    date = models.DateField(blank=False)
-    name = models.CharField(max_length=100)
+    '''Model for base parameters storage'''
+
+    date = models.DateField('date', blank=False)
+    name = models.CharField('name', max_length=100)
     name_code = models.CharField(
+        'name_code',
         blank=False,
         max_length=3,
         choices=NAME_CODES_CHOICES,
         unique=True,
     )
-    value = models.FloatField(blank=False)
+    value = models.FloatField('currency value', blank=False)
 
     class Meta:
+        verbose_name = 'base_currency'
         unique_together = [['date', 'name_code']]
 
 
 class CurrencyChanges(ComputedFieldsModel):
-    date = models.DateField(blank=False)
+    '''Model for currencies changes storage'''
+
+    date = models.DateField('date', blank=False)
     date_currency = models.ForeignKey(
         Currency,
+        on_delete=models.CASCADE,
         blank=True, null=True,
-        on_delete=models.CASCADE
     )
-    base_currency=models.ForeignKey(
+    base_currency = models.ForeignKey(
         BaseCurrency,
+        on_delete=models.CASCADE,
         blank=True, null=True,
-        on_delete=models.CASCADE
     )
 
-    class Meta:
-        unique_together = [['date', 'date_currency']]
-    
     @computed(
-        models.FloatField(),
+        models.FloatField('difference'),
         depends=[
             ('date_currency', ['value']),
             ('base_currency', ['value']),
         ]
     )
     def difference(self):
-        return round(self.date_currency.value - self.base_currency.value, 6)
-    
+        date_currency = self.date_currency.value
+        base_currency = self.base_currency.value
+        value = (date_currency - base_currency)/base_currency*100
+        return round(value, 2)
+
     @computed(
-        models.CharField(max_length=3),
+        models.CharField('name code', max_length=3),
         depends=[
             ('date_currency', ['name_code']),
         ]
@@ -79,6 +87,5 @@ class CurrencyChanges(ComputedFieldsModel):
     def name_code(self):
         return self.date_currency.name_code
 
-
-# class BaselineParams(models.Model):
-#     date = models.DateField(blank=False)
+    class Meta:
+        unique_together = [['date', 'date_currency']]

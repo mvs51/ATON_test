@@ -3,7 +3,6 @@ from urllib import request, parse
 from io import StringIO
 
 import pandas as pd
-import sqlite3
 
 
 URL_RATES = 'https://www.finmarket.ru/currency/rates/?'
@@ -21,16 +20,18 @@ CODES_MAPPING = {
 
 
 def read_currency_rates(
-        cur:int,
-        start_date:str,
-        end_date:str='',
-    ):
+        cur: int,
+        start_date: str,
+        end_date: str = '',
+):
+    '''Function to parse page with currency data'''
+
     start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
     if end_date:
         end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
     else:
         end_date = start_date + timedelta(days=1)
-        # end_date = start_date
+
     params = {
         'cur': cur,
         'pv': 1,
@@ -48,14 +49,16 @@ def read_currency_rates(
     return StringIO(page.read().decode("cp1251"))
 
 
-def process_currencies(df:pd.DataFrame, cur:str):
+def process_currencies(df: pd.DataFrame, cur: str):
+    '''Function to process currency data'''
+
     currencies = df.rename(columns={
         'Дата': 'date',
         'Кол-во': 'quantity',
         'Курс': 'value',
         'Изменение': 'difference'
     })
-    currencies['date']= pd.to_datetime(
+    currencies['date'] = pd.to_datetime(
         currencies['date'], format="%d.%m.%Y"
     )
     currencies['date'] = currencies['date'].dt.date
@@ -66,29 +69,16 @@ def process_currencies(df:pd.DataFrame, cur:str):
     return currencies.drop(columns=['difference', 'quantity'])
 
 
-def save_to_database(df: pd.DataFrame):
-    con = sqlite3.connect('db.sqlite3')
-    cur = con.cursor()
-
-    update_query = '''
-        INSERT INTO currency_currency (date, name, name_code, value)
-        SELECT date, name, name_code, value
-        FROM temp_table WHERE true
-        ON CONFLICT(date, name_code)
-        DO UPDATE SET value=EXCLUDED.value;
-    '''
-    df.to_sql('temp_table', con, if_exists='replace', index_label='id')
-    cur.execute(update_query)
-    cur.execute('''DROP TABLE temp_table;''')
-    con.commit()
-    con.close()
-
 def read_country_codes():
+    '''Function to parse page with countries and codes'''
+
     page = request.urlopen(URL_COUNTRIES)
     return StringIO(page.read().decode("utf-8"))
 
 
-def process_country_codes(df:pd.DataFrame):
+def process_country_codes(df: pd.DataFrame):
+    '''Function to process countries and codes'''
+
     currency_codes = df.rename(columns={
         'Код': 'name_code',
         'Валюта': 'name',
