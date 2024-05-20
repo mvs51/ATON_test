@@ -3,7 +3,7 @@ from computedfields.models import ComputedFieldsModel, computed
 
 
 ROUND_DIGITS = 2
-NAME_CODE_MAX_LENGTH =3
+NAME_CODE_MAX_LENGTH = 3
 NAME_MAX_LENGTH = 100
 NAME_CODES_CHOICES = (
     ('USD', 'USD'),
