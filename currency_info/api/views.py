@@ -4,7 +4,6 @@ import base64
 import pandas as pd
 import matplotlib
 import seaborn as sns
-
 from django.shortcuts import get_object_or_404
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response

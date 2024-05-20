@@ -7,7 +7,7 @@ import pandas as pd
 
 URL_RATES = 'https://www.finmarket.ru/currency/rates/?'
 URL_COUNTRIES = 'https://www.iban.ru/currency-codes'
-
+ROUND_DIGITS = 4
 CODES_MAPPING = {
     52148: 'USD',
     52170: 'EUR',
@@ -63,7 +63,7 @@ def process_currencies(df: pd.DataFrame, cur: str):
     )
     currencies['date'] = currencies['date'].dt.date
     currencies['value'] = round(
-        currencies['value']/currencies['quantity'], 4
+        currencies['value']/currencies['quantity'], ROUND_DIGITS
     )
     currencies['name_code'] = CODES_MAPPING[int(cur)]
     return currencies.drop(columns=['difference', 'quantity'])

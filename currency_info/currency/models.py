@@ -2,6 +2,9 @@ from django.db import models
 from computedfields.models import ComputedFieldsModel, computed
 
 
+ROUND_DIGITS = 2
+NAME_CODE_MAX_LENGTH =3
+NAME_MAX_LENGTH = 100
 NAME_CODES_CHOICES = (
     ('USD', 'USD'),
     ('EUR', 'EUR'),
@@ -17,7 +20,10 @@ class Currency(models.Model):
     '''Model for the currency rates storage'''
 
     date = models.DateField('date', blank=False)
-    name = models.CharField('name', max_length=100)
+    name = models.CharField(
+        'name',
+        max_length=NAME_MAX_LENGTH
+    )
     name_code = models.CharField(
         'name code',
         blank=False,
@@ -35,11 +41,14 @@ class BaseCurrency(models.Model):
     '''Model for base parameters storage'''
 
     date = models.DateField('date', blank=False)
-    name = models.CharField('name', max_length=100)
+    name = models.CharField(
+        'name',
+        max_length=NAME_MAX_LENGTH
+    )
     name_code = models.CharField(
         'name_code',
         blank=False,
-        max_length=3,
+        max_length=NAME_CODE_MAX_LENGTH,
         choices=NAME_CODES_CHOICES,
         unique=True,
     )
@@ -76,10 +85,12 @@ class CurrencyChanges(ComputedFieldsModel):
         date_currency = self.date_currency.value
         base_currency = self.base_currency.value
         value = (date_currency - base_currency)/base_currency*100
-        return round(value, 2)
+        return round(value, ROUND_DIGITS)
 
     @computed(
-        models.CharField('name code', max_length=3),
+        models.CharField(
+            'name code', max_length=NAME_CODE_MAX_LENGTH
+        ),
         depends=[
             ('date_currency', ['name_code']),
         ]
