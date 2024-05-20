@@ -4,11 +4,11 @@
 This service is for collecting and managing currecy rates.
 
 ## Requirements
-Django 4.2.13
-djangorestframework 3.15.1
-sqlparse 0.5.0
-pandas 2.2.2
-seaborn 0.13.2
+Django 4.2.13  
+djangorestframework 3.15.1  
+sqlparse 0.5.0  
+pandas 2.2.2  
+seaborn 0.13.2  
 
 ## Setup
 - Create and activate virtual environment
