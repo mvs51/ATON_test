@@ -14,7 +14,7 @@ CODES_MAPPING = {
     52146: 'GBP',
     52246: 'JPY',
     52158: 'TRY',
-    52238: "INR",
+    52238: 'INR',
     52207: 'CNY',
 }
 
@@ -24,8 +24,7 @@ def read_currency_rates(
         start_date: str,
         end_date: str = '',
 ):
-    '''Function to parse page with currency data'''
-
+    """Function to parse page with currency data"""
     start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
     if end_date:
         end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
@@ -46,12 +45,11 @@ def read_currency_rates(
     data = parse.urlencode(params)
     page = request.urlopen(f'{URL_RATES}{data}')
 
-    return StringIO(page.read().decode("cp1251"))
+    return StringIO(page.read().decode('cp1251'))
 
 
 def process_currencies(df: pd.DataFrame, cur: str):
-    '''Function to process currency data'''
-
+    """Function to process currency data"""
     currencies = df.rename(columns={
         'Дата': 'date',
         'Кол-во': 'quantity',
@@ -70,15 +68,13 @@ def process_currencies(df: pd.DataFrame, cur: str):
 
 
 def read_country_codes():
-    '''Function to parse page with countries and codes'''
-
+    """Function to parse page with countries and codes"""
     page = request.urlopen(URL_COUNTRIES)
     return StringIO(page.read().decode("utf-8"))
 
 
 def process_country_codes(df: pd.DataFrame):
-    '''Function to process countries and codes'''
-
+    """Function to process countries and codes"""
     currency_codes = df.rename(columns={
         'Код': 'name_code',
         'Валюта': 'name',

@@ -22,8 +22,7 @@ from .utils import (
 
 
 class CurrencyView(APIView):
-    '''View for the Currency model'''
-
+    """View for the Currency model"""
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'currency.html'
 
@@ -81,7 +80,7 @@ class CurrencyView(APIView):
 
 
 class BaseCurrencyView(APIView):
-    '''View for the BaseCurrency model'''
+    """View for the BaseCurrency model"""
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'base_currency.html'
 
@@ -127,7 +126,7 @@ class BaseCurrencyView(APIView):
 
 
 class CurrencyChangesView(APIView):
-    '''View for the CurrencyChanges model'''
+    """View for the CurrencyChanges model"""
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'currency_changes.html'
 

@@ -17,8 +17,7 @@ NAME_CODES_CHOICES = (
 
 
 class Currency(models.Model):
-    '''Model for the currency rates storage'''
-
+    """Model for the currency rates storage"""
     date = models.DateField('date', blank=False)
     name = models.CharField(
         'name',
@@ -38,8 +37,7 @@ class Currency(models.Model):
 
 
 class BaseCurrency(models.Model):
-    '''Model for base parameters storage'''
-
+    """Model for base parameters storage"""
     date = models.DateField('date', blank=False)
     name = models.CharField(
         'name',
@@ -60,8 +58,7 @@ class BaseCurrency(models.Model):
 
 
 class CurrencyChanges(ComputedFieldsModel):
-    '''Model for currencies changes storage'''
-
+    """Model for currencies changes storage"""
     date = models.DateField('date', blank=False)
     date_currency = models.ForeignKey(
         Currency,
@@ -91,9 +88,7 @@ class CurrencyChanges(ComputedFieldsModel):
         models.CharField(
             'name code', max_length=NAME_CODE_MAX_LENGTH
         ),
-        depends=[
-            ('date_currency', ['name_code']),
-        ]
+        depends=[('date_currency', ['name_code']),]
     )
     def name_code(self):
         return self.date_currency.name_code
